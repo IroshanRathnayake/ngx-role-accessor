@@ -1,8 +1,6 @@
 {
   "name": "ngx-role-accessor",
-  "version": "0.0.1",
-  "description": "A library for role-based access control in Angular applications",
-  "author": "Iroshan Rathnayake",
+  "version": "0.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

@@ -1,12 +1,29 @@
 {
   "name": "ngx-role-accessor",
-  "version": "0.0.1",
+  "version": "1.0.0",
+  "description": "Angular 16+ Standalone Role-Based Access Control (RBAC) Directives & Service",
+  "author": "Iroshan Rathnayake",
+  "license": "MIT",
   "peerDependencies": {
-    "@angular/common": "^19.2.0",
-    "@angular/core": "^19.2.0"
+    "@angular/core": "^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0",
+    "rxjs": "^7.0.0"
   },
   "dependencies": {
     "tslib": "^2.3.0"
+  },
+  "keywords": [
+    "angular",
+    "rbac",
+    "role",
+    "permission",
+    "access-control",
+    "directive",
+    "guard",
+    "ngx"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/IroshanRathnayake/ngx-role-accessor.git"
   },
   "sideEffects": false
 }

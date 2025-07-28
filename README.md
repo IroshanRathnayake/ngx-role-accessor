@@ -1,16 +1,32 @@
-# ngx-role-accessor
+# NGX Role Accessor - Advanced RBAC Library
 
-> 🔐 Lightweight Angular 16+ Standalone Role-Based Access Control (RBAC) Directives and Service with support for Roles, Permissions, and Tenant Context.
+<div align="center">
+
+![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)
+![Angular](https://img.shields.io/badge/angular-16%2B-red.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+![TypeScript](https://img.shields.io/badge/typescript-5.0%2B-blue.svg)
+
+**🔐 Enterprise-grade Angular Role-Based Access Control (RBAC) Library**
+
+[Documentation](./projects/ngx-role-accessor/README.md) • [Examples](#examples) • [API Reference](#api-reference)
+
+</div>
 
 ---
 
 ## ✨ Features
 
-- ✅ Easy-to-use `*hasRole`, `*hasAnyRole`, `*hasPermission` structural directives
-- ✅ Designed with Angular Standalone APIs (v16+)
-- ✅ Reactive, dynamic, and context-aware access control
-- ✅ Lightweight, framework-consistent, and customizable
-- ✅ Supports multi-tenant SaaS-style applications
+- ✅ **Angular 16+ Standalone APIs** - Modern Angular support
+- ✅ **Hierarchical Role System** - Role inheritance and levels
+- ✅ **Multi-tenant Architecture** - Built-in tenant isolation
+- ✅ **Fine-grained Permissions** - Resource and action-based permissions
+- ✅ **Performance Optimized** - LRU caching with TTL support
+- ✅ **Professional Logging** - Structured logging and audit trail
+- ✅ **Event-driven Architecture** - Real-time RBAC events
+- ✅ **Rich Directive Set** - Multiple directives for all scenarios
+- ✅ **Route Guards** - Ready-to-use guards for route protection
+- ✅ **Comprehensive Testing** - Full test coverage and utilities
 
 ---
 
@@ -22,97 +38,121 @@ npm install ngx-role-accessor
 
 ---
 
-## 🚀 Usage
+## 🚀 Quick Start
 
-### 1. Import the Directives in Your Standalone Component
-
-```ts
-import {
-  HasRoleDirective,
-  HasAnyRoleDirective,
-  HasPermissionDirective
+```typescript
+import { Component, inject } from '@angular/core';
+import { 
+  HasRoleDirective, 
+  HasAnyRoleDirective, 
+  HasPermissionDirective,
+  RoleService 
 } from 'ngx-role-accessor';
 
 @Component({
   standalone: true,
   selector: 'app-dashboard',
-  imports: [CommonModule, HasRoleDirective, HasAnyRoleDirective, HasPermissionDirective],
+  imports: [HasRoleDirective, HasAnyRoleDirective, HasPermissionDirective],
   template: `
-    <button *hasRole="'ADMIN'">Admin Control</button>
-    <div *hasAnyRole="['EDITOR', 'ADMIN']">Shared Access</div>
-    <div *hasPermission="'CAN_VIEW_REPORTS'">Reports</div>
+    <!-- Role-based access -->
+    <div *hasRole="'admin'">Admin only content</div>
+    <div *hasAnyRole="['admin', 'manager']">Management content</div>
+    
+    <!-- Permission-based access -->
+    <div *hasPermission="'CAN_VIEW_REPORTS'">Reports section</div>
+    
+    <!-- With fallback -->
+    <div *hasRole="'premium'; else basicUser">Premium features</div>
+    <ng-template #basicUser>Upgrade to premium</ng-template>
   `
 })
 export class DashboardComponent {
-  constructor(private roleService: RoleService) {
-    this.roleService.setRoles(['ADMIN']);
-    this.roleService.setPermissions(['CAN_VIEW_REPORTS']);
-    this.roleService.setTenant('tenant-001');
+  private roleService = inject(RoleService);
+
+  ngOnInit() {
+    // Set user context
+    this.roleService.setUserContext({
+      userId: 'user123',
+      roles: [
+        { id: 'admin', name: 'Administrator', active: true, level: 0 }
+      ],
+      permissions: [
+        { id: 'CAN_VIEW_REPORTS', name: 'View Reports', resource: 'reports', action: 'view', active: true }
+      ],
+      tenantId: 'tenant1',
+      lastUpdated: new Date()
+    });
   }
 }
 ```
 
 ---
 
-## 🧠 API
+## 🏗️ Project Structure
 
-### RoleService
-
-```ts
-setRoles(roles: string[]): void;
-setPermissions(permissions: string[]): void;
-setTenant(tenantId: string): void;
-
-hasRole(role: string): Observable<boolean>;
-hasAnyRole(roles: string[]): Observable<boolean>;
-hasPermission(permission: string): Observable<boolean>;
-getTenant(): Observable<string | null>;
 ```
-
-### Directives
-
-| Directive         | Input Type     | Description                                 |
-|------------------|----------------|---------------------------------------------|
-| `*hasRole`        | `string`       | Render if user has specific role            |
-| `*hasAnyRole`     | `string[]`     | Render if user has one of given roles       |
-| `*hasPermission`  | `string`       | Render if user has given permission         |
-
----
-
-## 🔐 Route Guard Usage
-
-You can create a custom `RoleGuard` like this:
-
-```ts
-import { inject } from '@angular/core';
-import { CanActivateFn } from '@angular/router';
-import { map } from 'rxjs/operators';
-import { RoleService } from 'ngx-role-accessor';
-
-export const adminOnlyGuard: CanActivateFn = () => {
-  const roleService = inject(RoleService);
-  return roleService.hasRole('ADMIN').pipe(map(has => has));
-};
-```
-
-Then use it in your route:
-
-```ts
-{
-  path: 'admin',
-  canActivate: [adminOnlyGuard],
-  loadComponent: () => import('./admin/admin.component').then(m => m.AdminComponent)
-}
+ngx-role-accessor/
+├── projects/
+│   └── ngx-role-accessor/          # Main library
+│       ├── src/
+│       │   ├── lib/
+│       │   │   ├── services/       # Core RBAC service
+│       │   │   ├── directives/     # Structural directives
+│       │   │   ├── guards/         # Route guards
+│       │   │   ├── pipes/          # Template pipes
+│       │   │   ├── utils/          # Utility classes
+│       │   │   ├── types/          # TypeScript definitions
+│       │   │   └── config/         # Configuration
+│       │   └── public-api.ts       # Public API exports
+│       └── README.md               # Full documentation
+├── angular.json                    # Angular CLI config
+├── package.json                    # Dependencies
+└── README.md                       # This file
 ```
 
 ---
 
-## 🧪 Running Unit Tests
+## � Documentation
 
-From the project root:
+For complete documentation, examples, and API reference, see:
+**[📚 Full Documentation](./projects/ngx-role-accessor/README.md)**
+
+---
+
+## 🔧 Development
+
+### Build the Library
+
+```bash
+ng build ngx-role-accessor
+```
+
+### Run Tests
 
 ```bash
 ng test ngx-role-accessor
+```
+
+### Run Demo
+
+```bash
+ng serve
+```
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+
+### Development Setup
+
+```bash
+git clone https://github.com/IroshanRathnayake/ngx-role-accessor.git
+cd ngx-role-accessor
+npm install
+npm run build
+npm run test
 ```
 
 ---
@@ -123,7 +163,9 @@ MIT © [Iroshan Rathnayake](https://github.com/IroshanRathnayake)
 
 ---
 
-## 🙌 Contributions
-
-Contributions, issues and feature requests are welcome!  
-Feel free to open a pull request or issue.
+<div align="center">
+  <p>Made with ❤️ for the Angular community</p>
+  <p>
+    <a href="https://github.com/IroshanRathnayake/ngx-role-accessor">⭐ Star this project</a>
+  </p>
+</div>
