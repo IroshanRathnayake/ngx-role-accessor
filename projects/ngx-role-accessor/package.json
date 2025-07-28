@@ -1,6 +1,6 @@
 {
   "name": "ngx-role-accessor",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Angular 16+ Standalone Role-Based Access Control (RBAC) Directives & Service",
   "author": "Iroshan Rathnayake",
   "license": "MIT",
