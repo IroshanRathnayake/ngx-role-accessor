@@ -1,7 +1,7 @@
 /**
  * @fileoverview Default configuration and constants for the RBAC system
  * @author Iroshan Rathnayake
- * @version 2.0.0
+ * @version 1.0.0
  */
 
 import { InjectionToken } from '@angular/core';

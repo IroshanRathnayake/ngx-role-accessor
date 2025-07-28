@@ -1,7 +1,7 @@
 /**
  * @fileoverview RBAC Pipes for template usage
  * @author Iroshan Rathnayake
- * @version 2.0.0
+ * @version 1.0.0
  */
 
 import { Pipe, PipeTransform, inject } from '@angular/core';

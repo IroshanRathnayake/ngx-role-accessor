@@ -3,7 +3,7 @@
  * 
  * @fileoverview Exports all public APIs for ngx-role-accessor library
  * @author Iroshan Rathnayake
- * @version 2.0.0
+ * @version 1.0.0
  */
 
 // Core Service
