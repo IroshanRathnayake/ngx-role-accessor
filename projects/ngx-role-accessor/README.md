@@ -1,63 +1,129 @@
-# NgxRoleAccessor
+# ngx-role-accessor
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.0.
+> 🔐 Lightweight Angular 16+ Standalone Role-Based Access Control (RBAC) Directives and Service with support for Roles, Permissions, and Tenant Context.
 
-## Code scaffolding
+---
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## ✨ Features
 
-```bash
-ng generate component component-name
-```
+- ✅ Easy-to-use `*hasRole`, `*hasAnyRole`, `*hasPermission` structural directives
+- ✅ Designed with Angular Standalone APIs (v16+)
+- ✅ Reactive, dynamic, and context-aware access control
+- ✅ Lightweight, framework-consistent, and customizable
+- ✅ Supports multi-tenant SaaS-style applications
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+---
 
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the library, run:
+## 📦 Installation
 
 ```bash
-ng build ngx-role-accessor
+npm install ngx-role-accessor
 ```
 
-This command will compile your project, and the build artifacts will be placed in the `dist/` directory.
+---
 
-### Publishing the Library
+## 🚀 Usage
 
-Once the project is built, you can publish your library by following these steps:
+### 1. Import the Directives in Your Standalone Component
 
-1. Navigate to the `dist` directory:
-   ```bash
-   cd dist/ngx-role-accessor
-   ```
+```ts
+import {
+  HasRoleDirective,
+  HasAnyRoleDirective,
+  HasPermissionDirective
+} from 'ngx-role-accessor';
 
-2. Run the `npm publish` command to publish your library to the npm registry:
-   ```bash
-   npm publish
-   ```
+@Component({
+  standalone: true,
+  selector: 'app-dashboard',
+  imports: [CommonModule, HasRoleDirective, HasAnyRoleDirective, HasPermissionDirective],
+  template: `
+    <button *hasRole="'ADMIN'">Admin Control</button>
+    <div *hasAnyRole="['EDITOR', 'ADMIN']">Shared Access</div>
+    <div *hasPermission="'CAN_VIEW_REPORTS'">Reports</div>
+  `
+})
+export class DashboardComponent {
+  constructor(private roleService: RoleService) {
+    this.roleService.setRoles(['ADMIN']);
+    this.roleService.setPermissions(['CAN_VIEW_REPORTS']);
+    this.roleService.setTenant('tenant-001');
+  }
+}
+```
 
-## Running unit tests
+---
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+## 🧠 API
+
+### RoleService
+
+```ts
+setRoles(roles: string[]): void;
+setPermissions(permissions: string[]): void;
+setTenant(tenantId: string): void;
+
+hasRole(role: string): Observable<boolean>;
+hasAnyRole(roles: string[]): Observable<boolean>;
+hasPermission(permission: string): Observable<boolean>;
+getTenant(): Observable<string | null>;
+```
+
+### Directives
+
+| Directive         | Input Type     | Description                                 |
+|------------------|----------------|---------------------------------------------|
+| `*hasRole`        | `string`       | Render if user has specific role            |
+| `*hasAnyRole`     | `string[]`     | Render if user has one of given roles       |
+| `*hasPermission`  | `string`       | Render if user has given permission         |
+
+---
+
+## 🔐 Route Guard Usage
+
+You can create a custom `RoleGuard` like this:
+
+```ts
+import { inject } from '@angular/core';
+import { CanActivateFn } from '@angular/router';
+import { map } from 'rxjs/operators';
+import { RoleService } from 'ngx-role-accessor';
+
+export const adminOnlyGuard: CanActivateFn = () => {
+  const roleService = inject(RoleService);
+  return roleService.hasRole('ADMIN').pipe(map(has => has));
+};
+```
+
+Then use it in your route:
+
+```ts
+{
+  path: 'admin',
+  canActivate: [adminOnlyGuard],
+  loadComponent: () => import('./admin/admin.component').then(m => m.AdminComponent)
+}
+```
+
+---
+
+## 🧪 Running Unit Tests
+
+From the project root:
 
 ```bash
-ng test
+ng test ngx-role-accessor
 ```
 
-## Running end-to-end tests
+---
 
-For end-to-end (e2e) testing, run:
+## 📄 License
 
-```bash
-ng e2e
-```
+MIT © [Iroshan Rathnayake](https://github.com/IroshanRathnayake)
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+---
 
-## Additional Resources
+## 🙌 Contributions
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Contributions, issues and feature requests are welcome!  
+Feel free to open a pull request or issue.
